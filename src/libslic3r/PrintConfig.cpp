@@ -836,7 +836,7 @@ void PrintConfigDef::init_fff_params()
     def->set_default_value(new ConfigOptionEnum<InfillPattern>(ipMonotonic));
 
     def = this->add("external_perimeter_extrusion_width", coFloatOrPercent);
-    def->label = L("External perimeters");
+    def->full_label = L("External perimeters");
     def->category = L("Extrusion Width");
     def->tooltip = L("Set this to a non-zero value to set a manual extrusion width for external perimeters. "
                    "If left zero, default extrusion width will be used if set, otherwise 1.125 x nozzle diameter will be used. "
@@ -846,6 +846,17 @@ void PrintConfigDef::init_fff_params()
     def->max_literal = 50;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloatOrPercent(0, false));
+
+    def = this->add("external_perimeter_extrusion_width_variation", coFloat);
+    def->label = L("variation");
+    def->category = L("Extrusion Width");
+    def->tooltip = L("Set this to a non-zero value to vary the external perimeter extrusion width on alternating layers. "
+                    "If expressed as a percentage, it will be computed over the external perimeter extrusion width");
+    def->sidetext = L("mm");
+    def->min=0;
+    def->max_literal = 1;
+    def->mode = comAdvanced;
+    def->set_default_value(new ConfigOptionFloat(0.02));
 
     def = this->add("external_perimeter_speed", coFloatOrPercent);
     def->label = L("External perimeters");

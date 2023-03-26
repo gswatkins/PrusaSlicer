@@ -115,7 +115,8 @@ double Flow::extrusion_width(const std::string& opt_key, const ConfigOptionResol
 
 // This constructor builds a Flow object from an extrusion width config setting
 // and other context properties.
-Flow Flow::new_from_config_width(FlowRole role, const ConfigOptionFloatOrPercent &width, float nozzle_diameter, float height)
+Flow Flow::new_from_config_width(FlowRole role, const ConfigOptionFloatOrPercent &width, float nozzle_diameter, float height,
+                                    const ConfigOptionFloat &width_variation)
 {
     if (height <= 0)
         throw Slic3r::InvalidArgument("Invalid flow height supplied to new_from_config_width()");
@@ -128,6 +129,9 @@ Flow Flow::new_from_config_width(FlowRole role, const ConfigOptionFloatOrPercent
         // If user set a manual value, use it.
         w = float(width.get_abs_value(height));
     }
+
+    // Apply the specified width variation
+    w += width_variation.value;
     
     return Flow(w, height, rounded_rectangle_extrusion_spacing(w, height), nozzle_diameter, false);
 }

@@ -1613,7 +1613,11 @@ void TabPrint::build()
         optgroup->append_single_option_line("extrusion_width");
         optgroup->append_single_option_line("first_layer_extrusion_width");
         optgroup->append_single_option_line("perimeter_extrusion_width");
-        optgroup->append_single_option_line("external_perimeter_extrusion_width");
+        auto option = optgroup->get_option("external_perimeter_extrusion_width");
+        line = { option.opt.full_label, "" };
+        line.append_option(option);
+        line.append_option(optgroup->get_option("external_perimeter_extrusion_width_variation"));
+        optgroup->append_line(line);
         optgroup->append_single_option_line("infill_extrusion_width");
         optgroup->append_single_option_line("solid_infill_extrusion_width");
         optgroup->append_single_option_line("top_infill_extrusion_width");
@@ -1652,7 +1656,7 @@ void TabPrint::build()
         optgroup = page->new_optgroup(L("Output file"));
         optgroup->append_single_option_line("gcode_comments");
         optgroup->append_single_option_line("gcode_label_objects");
-        Option option = optgroup->get_option("output_filename_format");
+        option = optgroup->get_option("output_filename_format");
         option.opt.full_width = true;
         optgroup->append_single_option_line(option);
 
