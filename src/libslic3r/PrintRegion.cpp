@@ -18,16 +18,17 @@ unsigned int PrintRegion::extruder(FlowRole role) const
     return extruder;
 }
 
-Flow PrintRegion::flow(const PrintObject &object, FlowRole role, double layer_height, bool first_layer) const
+Flow PrintRegion::flow(const PrintObject &object, FlowRole role, double layer_height, size_t layer_id) const
 {
     const PrintConfig          &print_config = object.print()->config();
     ConfigOptionFloatOrPercent  config_width;
     // Get extrusion width from configuration.
     // (might be an absolute value, or a percent value, or zero for auto)
-    if (first_layer && print_config.first_layer_extrusion_width.value > 0) {
+    if ((layer_id == 0) && print_config.first_layer_extrusion_width.value > 0) {
         config_width = print_config.first_layer_extrusion_width;
     } else if (role == frExternalPerimeter) {
         config_width = m_config.external_perimeter_extrusion_width;
+        config_width.value *= ((layer_id % 2) ? 1.05 : 0.95);
     } else if (role == frPerimeter) {
         config_width = m_config.perimeter_extrusion_width;
     } else if (role == frInfill) {
