@@ -1557,6 +1557,15 @@ void PrintConfigDef::init_fff_params()
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloatOrPercent(0, false));
 
+    def = this->add("infill_flow_ratio", coFloat);
+    def->label = L("Infill flow ratio");
+    def->category = L("Flow");
+    def->tooltip = L("This factor affects the amount of plastic for infill.");
+    def->min = 0;
+    def->max = 2;
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionFloat(1));
+
     def = this->add("infill_first", coBool);
     def->label = L("Infill before perimeters");
     def->tooltip = L("This option will switch the print order of perimeters and infill, making the latter first.");

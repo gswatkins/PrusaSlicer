@@ -32,16 +32,17 @@ Flow LayerRegion::bridging_flow(FlowRole role, bool force_thick_bridges) const
     const PrintRegion       &region         = this->region();
     const PrintRegionConfig &region_config  = region.config();
     const PrintObject       &print_object   = *this->layer()->object();
+    const double            flow_ratio      = (role == frInfill) ? region_config.infill_flow_ratio : region_config.bridge_flow_ratio;
     if (print_object.config().thick_bridges || force_thick_bridges) {
         // The old Slic3r way (different from all other slicers): Use rounded extrusions.
         // Get the configured nozzle_diameter for the extruder associated to the flow role requested.
         // Here this->extruder(role) - 1 may underflow to MAX_INT, but then the get_at() will follback to zero'th element, so everything is all right.
         auto nozzle_diameter = float(print_object.print()->config().nozzle_diameter.get_at(region.extruder(role) - 1));
         // Applies default bridge spacing.
-        return Flow::bridging_flow(float(sqrt(region_config.bridge_flow_ratio)) * nozzle_diameter, nozzle_diameter);
+        return Flow::bridging_flow(float(sqrt(flow_ratio)) * nozzle_diameter, nozzle_diameter);
     } else {
-        // The same way as other slicers: Use normal extrusions. Apply bridge_flow_ratio while maintaining the original spacing.
-        return this->flow(role).with_flow_ratio(region_config.bridge_flow_ratio);
+        // The same way as other slicers: Use normal extrusions. Apply flow_ratio while maintaining the original spacing.
+        return this->flow(role).with_flow_ratio(flow_ratio);
     }
 }
 
